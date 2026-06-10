@@ -14,9 +14,7 @@ import CartPage from '../pages/client/CartPage'
 import ProfilePage from '../pages/client/ProfilePage'
 
 import AdminProductListPage from '../pages/admin/AdminProductListPage'
-import AdminProductDetailPage from '../pages/admin/AdminProductDetailPage'
-import AdminProductCreatePage from '../pages/admin/AdminProductCreatePage'
-import AdminProductEditPage from '../pages/admin/AdminProductEditPage'
+import AdminProductFormPage from '../pages/admin/AdminProductFormPage'
 
 export default function AppRoutes() {
     return (
@@ -39,9 +37,8 @@ export default function AppRoutes() {
             <Route element={<ProtectedRoute requiredRole="admin" />}>
                 <Route element={<AdminLayout />}>
                     <Route path="/admin/products" element={<AdminProductListPage />} />
-                    <Route path="/admin/products/new" element={<AdminProductCreatePage />} />
-                    <Route path="/admin/products/:id" element={<AdminProductDetailPage />} />
-                    <Route path="/admin/products/:id/edit" element={<AdminProductEditPage />} />
+                    <Route path="/admin/products/new" element={<AdminProductFormPage />} />
+                    <Route path="/admin/products/:id/edit" element={<AdminProductFormPage />} />
                 </Route>
             </Route>
         </Routes>
