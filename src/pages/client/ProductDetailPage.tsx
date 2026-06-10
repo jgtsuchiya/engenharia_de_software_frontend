@@ -11,8 +11,10 @@ import {
     Divider,
     Space,
 } from 'antd'
-import { ShoppingCartOutlined, HeartOutlined, ArrowLeftOutlined } from '@ant-design/icons'
+import { ShoppingCartOutlined, HeartFilled, HeartOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { productService } from '../../services/productService'
+import { useAuthContext } from '../../contexts/AuthContext'
+import { useFavorites } from '../../hooks/useFavorites'
 import type { Product } from '../../types/product'
 import placeholderImage from '../../assets/hero.png'
 
@@ -30,6 +32,9 @@ const CATEGORIES: Record<number, string> = {
 export default function ProductDetailPage() {
     const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()
+
+    const { user } = useAuthContext()
+    const { isFavorited, toggleFavorite } = useFavorites()
 
     const [product, setProduct] = useState<Product | null>(null)
     const [loading, setLoading] = useState(true)
@@ -73,6 +78,8 @@ export default function ProductDetailPage() {
     })
 
     const inStock = product.stockQuantity > 0
+    const isClient = user?.role === 'client'
+    const favorited = product ? isFavorited(product.id) : false
 
     return (
         <div style={{ padding: '24px 48px' }}>
@@ -129,12 +136,21 @@ export default function ProductDetailPage() {
                             Adicionar ao carrinho
                         </Button>
 
-                        <Button
-                            size="large"
-                            icon={<HeartOutlined />}
-                        >
-                            Favoritar
-                        </Button>
+                        {isClient && (
+                            <Button
+                                size="large"
+                                icon={
+                                    favorited ? (
+                                        <HeartFilled style={{ color: '#ff4d4f' }} />
+                                    ) : (
+                                        <HeartOutlined />
+                                    )
+                                }
+                                onClick={() => toggleFavorite(product.id)}
+                            >
+                                {favorited ? 'Favoritado' : 'Favoritar'}
+                            </Button>
+                        )}
                     </Space>
                 </Col>
             </Row>

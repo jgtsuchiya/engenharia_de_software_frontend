@@ -2,6 +2,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
 import { AuthProvider } from './contexts/AuthContext'
 import { CartProvider } from './contexts/CartContext'
+import { FavoriteProvider } from './contexts/FavoriteContext'
 import AppRoutes from './routes/AppRoutes'
 
 export default function App() {
@@ -9,9 +10,11 @@ export default function App() {
     <ConfigProvider>
       <BrowserRouter>
         <AuthProvider>
-          <CartProvider>
-            <AppRoutes />
-          </CartProvider>
+          <FavoriteProvider>
+            <CartProvider>
+              <AppRoutes />
+            </CartProvider>
+          </FavoriteProvider>
         </AuthProvider>
       </BrowserRouter>
     </ConfigProvider>
