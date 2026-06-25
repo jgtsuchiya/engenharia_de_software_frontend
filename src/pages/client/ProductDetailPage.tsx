@@ -10,11 +10,13 @@ import {
     Tag,
     Divider,
     Space,
+    message,
 } from 'antd'
 import { ShoppingCartOutlined, HeartFilled, HeartOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { productService } from '../../services/productService'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { useFavorites } from '../../hooks/useFavorites'
+import { useCart } from '../../hooks/useCart'
 import type { Product } from '../../types/product'
 import placeholderImage from '../../assets/hero.png'
 
@@ -35,6 +37,8 @@ export default function ProductDetailPage() {
 
     const { user } = useAuthContext()
     const { isFavorited, toggleFavorite } = useFavorites()
+    const { addItem } = useCart()
+    const [messageApi, contextHolder] = message.useMessage()
 
     const [product, setProduct] = useState<Product | null>(null)
     const [loading, setLoading] = useState(true)
@@ -81,8 +85,15 @@ export default function ProductDetailPage() {
     const isClient = user?.role === 'client'
     const favorited = product ? isFavorited(product.id) : false
 
+    function handleAddToCart() {
+        if (!product) return
+        addItem(product)
+        messageApi.success(`"${product.name}" adicionado ao carrinho!`)
+    }
+
     return (
         <div style={{ padding: '24px 48px' }}>
+            {contextHolder}
             <Button
                 icon={<ArrowLeftOutlined />}
                 type="link"
@@ -132,6 +143,7 @@ export default function ProductDetailPage() {
                             size="large"
                             icon={<ShoppingCartOutlined />}
                             disabled={!inStock}
+                            onClick={handleAddToCart}
                         >
                             Adicionar ao carrinho
                         </Button>
