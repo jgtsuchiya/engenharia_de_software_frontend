@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+        - VITE_APP_NAME=${VITE_APP_NAME}
+    ports:
+      - "4173:4173"
