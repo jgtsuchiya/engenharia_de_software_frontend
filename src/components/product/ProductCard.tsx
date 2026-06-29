@@ -5,7 +5,6 @@ import type { MouseEvent } from 'react'
 import type { Product } from '../../types/product'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { useFavorites } from '../../hooks/useFavorites'
-import placeholderImage from '../../assets/hero.png'
 
 const { Meta } = Card
 
@@ -33,7 +32,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 cover={
                     <img
                         alt={product.name}
-                        src={placeholderImage}
+                        src={`https://picsum.photos/seed/${product.id}/800`}
                         style={{ height: 200, objectFit: 'cover' }}
                     />
                 }

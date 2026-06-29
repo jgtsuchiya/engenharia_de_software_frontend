@@ -9,6 +9,7 @@ interface CartContextType {
     removeItem: (productId: string) => void
     updateQuantity: (productId: string, quantity: number) => void
     clearCart: () => void
+    hasItem: (productId: string) => boolean
 }
 
 const emptyCart: Cart = { items: [], total: 0 }
@@ -62,8 +63,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setCart(emptyCart)
     }
 
+    function hasItem(productId: string) {
+        return cart.items.some(({product: {id}}) => id === productId)
+    }
+
     return (
-        <CartContext.Provider value={{ cart, addItem, removeItem, updateQuantity, clearCart }}>
+        <CartContext.Provider value={{ cart, addItem, removeItem, updateQuantity, clearCart, hasItem }}>
             {children}
         </CartContext.Provider>
     )

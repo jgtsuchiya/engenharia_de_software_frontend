@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Form, Input, Button, Card, Radio, Typography, Alert } from 'antd'
-import { Link, useNavigate } from 'react-router-dom'
+import { Form, Input, Button, Card, Radio, Typography, Alert, Flex } from 'antd'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { authService } from '../../services/authService'
 import { useAuth } from '../../hooks/useAuth'
 import type { LoginPayload } from '../../types/auth'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 
 const { Title } = Typography
 
@@ -12,14 +13,19 @@ export default function LoginPage() {
     const navigate = useNavigate()
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
+    const location = useLocation()
+    console.log({location})
 
     async function handleSubmit(values: LoginPayload) {
         setError(null)
         setLoading(true)
         try {
+            const search = new URLSearchParams(location.search);
+            const redirectTo = search.get("redirectTo") ?? "/";
+
             const { token, user } = await authService.login(values)
             login(token, user)
-            navigate(user.role === 'admin' ? '/admin/products' : '/')
+            navigate(user.role === 'admin' ? '/admin/products' : redirectTo)
         } catch {
             setError('E-mail, senha ou tipo de conta inválidos.')
         } finally {
@@ -30,7 +36,10 @@ export default function LoginPage() {
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
             <Card style={{ width: 400 }}>
-                <Title level={3} style={{ textAlign: 'center' }}>Entrar</Title>
+                <Flex align='center' style={{ marginTop: 8, marginBottom: 24 }}>
+                    <Button onClick={() => navigate("/")} style={{ position: "absolute" }} type='text' icon={<ArrowLeftOutlined />}>Voltar</Button>
+                    <Title level={3} style={{ textAlign: 'center', margin: 0, flex: 1 }}>Entrar</Title>
+                </Flex>
 
                 {error && <Alert message={error} type="error" showIcon style={{ marginBottom: 16 }} />}
 

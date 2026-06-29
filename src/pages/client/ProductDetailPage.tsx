@@ -18,7 +18,6 @@ import { useAuthContext } from '../../contexts/AuthContext'
 import { useFavorites } from '../../hooks/useFavorites'
 import { useCart } from '../../hooks/useCart'
 import type { Product } from '../../types/product'
-import placeholderImage from '../../assets/hero.png'
 
 const { Title, Text, Paragraph } = Typography
 
@@ -35,9 +34,9 @@ export default function ProductDetailPage() {
     const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()
 
-    const { user } = useAuthContext()
+    const { user, isAuthenticated } = useAuthContext()
     const { isFavorited, toggleFavorite } = useFavorites()
-    const { addItem } = useCart()
+    const { addItem, hasItem } = useCart()
     const [messageApi, contextHolder] = message.useMessage()
 
     const [product, setProduct] = useState<Product | null>(null)
@@ -84,6 +83,7 @@ export default function ProductDetailPage() {
     const inStock = product.stockQuantity > 0
     const isClient = user?.role === 'client'
     const favorited = product ? isFavorited(product.id) : false
+    const isInCart = hasItem(product.id)
 
     function handleAddToCart() {
         if (!product) return
@@ -106,7 +106,7 @@ export default function ProductDetailPage() {
             <Row gutter={[48, 24]}>
                 <Col xs={24} md={10}>
                     <img
-                        src={placeholderImage}
+                        src={`https://picsum.photos/seed/${product.id}/800`}
                         alt={product.name}
                         style={{ width: '100%', borderRadius: 8, objectFit: 'cover', maxHeight: 400 }}
                     />
@@ -138,7 +138,14 @@ export default function ProductDetailPage() {
                     <Divider />
 
                     <Space size="middle">
-                        <Button
+                        {isAuthenticated ? (isInCart ? <Button
+                            type="primary"
+                            size="large"
+                            icon={<ShoppingCartOutlined />}
+                            onClick={() => navigate("/cart")}
+                        >
+                            Ver carrinho
+                        </Button> : <Button
                             type="primary"
                             size="large"
                             icon={<ShoppingCartOutlined />}
@@ -146,7 +153,13 @@ export default function ProductDetailPage() {
                             onClick={handleAddToCart}
                         >
                             Adicionar ao carrinho
-                        </Button>
+                        </Button>) : <Button
+                            type="primary"
+                            size="large"
+                            onClick={() => navigate(`/auth/login?redirectTo=/products/${product.id}`)}
+                        >
+                            Acesse sua conta para comprar
+                        </Button>}
 
                         {isClient && (
                             <Button

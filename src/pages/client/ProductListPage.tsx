@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { Row, Col, Input, Select, Slider, Typography, Spin, Empty, Alert } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import ProductCard from '../../components/product/ProductCard'
@@ -85,6 +85,14 @@ export default function ProductListPage() {
         })
     }
 
+    const productList = useMemo(() => {
+        return <>{products.map((product) => (
+            <Col key={product.id} xs={24} sm={12} md={8} lg={6}>
+                <ProductCard product={product} />
+            </Col>
+        ))}</>
+    }, [products])
+
     return (
         <div style={{ padding: '24px 48px' }}>
             <Title level={2}>Produtos</Title>
@@ -163,11 +171,7 @@ export default function ProductListPage() {
                 <Empty description="Nenhum produto encontrado." />
             ) : (
                 <Row gutter={[16, 16]}>
-                    {products.map((product) => (
-                        <Col key={product.id} xs={24} sm={12} md={8} lg={6}>
-                            <ProductCard product={product} />
-                        </Col>
-                    ))}
+                    {productList}
                 </Row>
             )}
         </div>
