@@ -9,7 +9,7 @@ export default function ClientLayout() {
     return (
         <Layout>
             <AppHeader />
-            <Content style={{}}>
+            <Content>
                 <Outlet />
             </Content>
             <AppFooter />

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { Row, Col, Input, Select, Slider, Typography, Spin, Empty, Alert } from 'antd'
+import { Row, Col, Input, Select, Slider, Typography, Spin, Empty, Alert, Flex, Card } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import ProductCard from '../../components/product/ProductCard'
 import { productService } from '../../services/productService'
@@ -29,6 +29,7 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
 const MAX_PRICE = 500
 
 export default function ProductListPage() {
+    const [petMatchImgSrc] = useState(() => getPetMatchImageSrc())
     const [products, setProducts] = useState<Product[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -94,86 +95,95 @@ export default function ProductListPage() {
     }, [products])
 
     return (
-        <div style={{ padding: '24px 48px' }}>
-            <Title level={2}>Produtos</Title>
-
-            <Row gutter={[16, 16]} style={{ marginBottom: 24 }} align="middle">
-                <Col xs={24} sm={10} md={7}>
-                    <Input.Search
-                        placeholder="Buscar por nome"
-                        prefix={<SearchOutlined />}
-                        allowClear
-                        onSearch={handleNameSearch}
-                        onChange={(e) => {
-                            setNameInput(e.target.value)
-                            if (!e.target.value) handleNameSearch('')
-                        }}
-                        value={nameInput}
-                    />
-                </Col>
-
-                <Col xs={24} sm={7} md={5}>
-                    <Select
-                        placeholder="Categoria"
-                        allowClear
-                        style={{ width: '100%' }}
-                        onChange={handleCategoryChange}
-                    >
-                        {Object.entries(CATEGORIES).map(([id, label]) => (
-                            <Option key={id} value={Number(id)}>
-                                {label}
-                            </Option>
-                        ))}
-                    </Select>
-                </Col>
-
-                <Col xs={24} sm={7} md={5}>
-                    <Select
-                        placeholder="Ordenar por"
-                        allowClear
-                        style={{ width: '100%' }}
-                        onChange={handleSortChange}
-                    >
-                        {SORT_OPTIONS.map((opt) => (
-                            <Option key={opt.value} value={opt.value}>
-                                {opt.label}
-                            </Option>
-                        ))}
-                    </Select>
-                </Col>
-
-                <Col xs={24} md={7}>
-                    <Typography.Text type="secondary" style={{ display: 'block', marginBottom: 4 }}>
-                        Preço: R$ {priceRange[0]} – R$ {priceRange[1]}
-                        {priceRange[1] === MAX_PRICE ? '+' : ''}
-                    </Typography.Text>
-                    <Slider
-                        range
-                        min={0}
-                        max={MAX_PRICE}
-                        value={priceRange}
-                        onChange={(v) => setPriceRange(v as [number, number])}
-                        onChangeComplete={(v) => handlePriceChange(v as [number, number])}
-                        tooltip={{ formatter: (v) => `R$ ${v}` }}
-                    />
-                </Col>
-            </Row>
-
-            {error && (
-                <Alert type="error" message={error} style={{ marginBottom: 16 }} />
-            )}
-
-            {loading ? (
-                <div style={{ textAlign: 'center', padding: 64 }}>
-                    <Spin size="large" />
-                </div>
-            ) : products.length === 0 ? (
-                <Empty description="Nenhum produto encontrado." />
-            ) : (
-                <Row gutter={[16, 16]}>
-                    {productList}
+        <Flex style={{ padding: '24px 96px', backgroundImage: petMatchImgSrc, minHeight: "calc(100svh - 64px - 74px)" }}>
+            <Card style={{ flex: 1 }}>
+                <Title level={2}>Produtos</Title>
+                <Row gutter={[16, 16]} style={{ marginBottom: 24 }} align="middle">
+                    <Col xs={24} sm={10} md={7}>
+                        <Input.Search
+                            placeholder="Buscar por nome"
+                            prefix={<SearchOutlined />}
+                            allowClear
+                            onSearch={handleNameSearch}
+                            onChange={(e) => {
+                                setNameInput(e.target.value)
+                                if (!e.target.value) handleNameSearch('')
+                            }}
+                            value={nameInput}
+                        />
+                    </Col>
+                    <Col xs={24} sm={7} md={5}>
+                        <Select
+                            placeholder="Categoria"
+                            allowClear
+                            style={{ width: '100%' }}
+                            onChange={handleCategoryChange}
+                        >
+                            {Object.entries(CATEGORIES).map(([id, label]) => (
+                                <Option key={id} value={Number(id)}>
+                                    {label}
+                                </Option>
+                            ))}
+                        </Select>
+                    </Col>
+                    <Col xs={24} sm={7} md={5}>
+                        <Select
+                            placeholder="Ordenar por"
+                            allowClear
+                            style={{ width: '100%' }}
+                            onChange={handleSortChange}
+                        >
+                            {SORT_OPTIONS.map((opt) => (
+                                <Option key={opt.value} value={opt.value}>
+                                    {opt.label}
+                                </Option>
+                            ))}
+                        </Select>
+                    </Col>
+                    <Col xs={24} md={7}>
+                        <Typography.Text type="secondary" style={{ display: 'block', marginBottom: 4 }}>
+                            Preço: R$ {priceRange[0]} – R$ {priceRange[1]}
+                            {priceRange[1] === MAX_PRICE ? '+' : ''}
+                        </Typography.Text>
+                        <Slider
+                            range
+                            min={0}
+                            max={MAX_PRICE}
+                            value={priceRange}
+                            onChange={(v) => setPriceRange(v as [number, number])}
+                            onChangeComplete={(v) => handlePriceChange(v as [number, number])}
+                            tooltip={{ formatter: (v) => `R$ ${v}` }}
+                        />
+                    </Col>
                 </Row>
-            )}
-        </div>
+                {error && (
+                    <Alert type="error" message={error} style={{ marginBottom: 16 }} />
+                )}
+                {loading ? (
+                    <div style={{ textAlign: 'center', padding: 64 }}>
+                        <Spin size="large" />
+                    </div>
+                ) : products.length === 0 ? (
+                    <Empty description="Nenhum produto encontrado." />
+                ) : (
+                    <Row gutter={[16, 16]}>
+                        {productList}
+                    </Row>
+                )}
+            </Card>
+        </Flex>
     )
+}
+
+function getPetMatchImageSrc() {
+    const images = [
+        "images/pet_match_blue.png",
+        "images/pet_match_green.jpg",
+        "images/pet_match_violet.jpg",
+        "images/pet_match_yellow.png",
+    ]
+
+    const rand = Math.round(Math.random() * 100) % 4
+
+    return `url("${images[rand]}")`
 }
