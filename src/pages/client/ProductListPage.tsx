@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
-import { Row, Col, Input, Select, Slider, Typography, Spin, Empty, Alert, Flex, Card } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
+import { Alert, Card, Col, Empty, Flex, Input, Row, Select, Slider, Spin, Typography } from 'antd'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import ProductCard from '../../components/product/ProductCard'
 import { productService } from '../../services/productService'
 import type { Product, ProductFilters, SortBy, SortOrder } from '../../types/product'
@@ -29,6 +30,7 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
 const MAX_PRICE = 500
 
 export default function ProductListPage() {
+    const location = useLocation()
     const [petMatchImgSrc] = useState(() => getPetMatchImageSrc())
     const [products, setProducts] = useState<Product[]>([])
     const [loading, setLoading] = useState(true)
@@ -36,6 +38,7 @@ export default function ProductListPage() {
 
     const [filters, setFilters] = useState<ProductFilters>({})
     const [nameInput, setNameInput] = useState('')
+    const [category, setCategory] = useState<number>()
     const [priceRange, setPriceRange] = useState<[number, number]>([0, MAX_PRICE])
 
     const fetchProducts = useCallback(async (activeFilters: ProductFilters) => {
@@ -55,6 +58,10 @@ export default function ProductListPage() {
         fetchProducts({})
     }, [fetchProducts])
 
+    useEffect(() => {
+        handleCategoryChange(location.state?.categoryId)
+    }, [location.state?.categoryId])
+
     function applyFilters(partial: Partial<ProductFilters>) {
         const next = { ...filters, ...partial }
         setFilters(next)
@@ -67,6 +74,7 @@ export default function ProductListPage() {
 
     function handleCategoryChange(value: number | undefined) {
         applyFilters({ category: value })
+        setCategory(value)
     }
 
     function handleSortChange(value: SortOption | undefined) {
@@ -118,13 +126,12 @@ export default function ProductListPage() {
                             allowClear
                             style={{ width: '100%' }}
                             onChange={handleCategoryChange}
-                        >
-                            {Object.entries(CATEGORIES).map(([id, label]) => (
-                                <Option key={id} value={Number(id)}>
-                                    {label}
-                                </Option>
-                            ))}
-                        </Select>
+                            value={category}
+                            options={Object.entries(CATEGORIES).map(([id, label]) => ({
+                                label,
+                                value: id,
+                            }))}
+                        />
                     </Col>
                     <Col xs={24} sm={7} md={5}>
                         <Select
