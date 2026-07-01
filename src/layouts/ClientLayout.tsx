@@ -1,4 +1,4 @@
-import { ChairOutlined, HomeOutlined, MedicationLiquidOutlined, RestaurantOutlined, ShowerOutlined, SportsBaseballOutlined } from '@mui/icons-material'
+import { ChairOutlined, HomeOutlined, Inventory2Outlined, MedicationLiquidOutlined, RestaurantOutlined, ShowerOutlined, SportsBaseballOutlined } from '@mui/icons-material'
 import { Layout, Menu, type MenuProps } from 'antd'
 import { Outlet, useNavigate } from 'react-router-dom'
 import AppFooter from '../components/common/Footer'
@@ -25,6 +25,7 @@ function getItem(
 
 
 const items: MenuItem[] = [
+    getItem('Todos os produtos', '0', <Inventory2Outlined />),
     getItem('Alimentação & Petiscos', '1', <RestaurantOutlined />),
     getItem('Saúde & Farmácia', '2', <MedicationLiquidOutlined />),
     getItem('Higiene & Estética', '3', <ShowerOutlined />),
@@ -38,7 +39,7 @@ export default function ClientLayout() {
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
-            <Sider collapsible width={240} style={{
+            <Sider defaultCollapsed collapsible width={240} style={{
                 overflow: 'auto',
                 height: '100vh',
                 position: 'sticky',
@@ -48,7 +49,7 @@ export default function ClientLayout() {
                 scrollbarGutter: 'stable',
             }}>
                 <Menu onClick={({ key }) => {
-                    navigate("/", { state: { categoryId: key } })
+                    navigate("/products", { state: { categoryId: key !== '0' ? key : undefined } })
                 }} theme="dark" mode="inline" items={items} style={{ paddingTop: 64 }} />
             </Sider>
             <Layout>

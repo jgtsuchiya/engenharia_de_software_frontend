@@ -15,6 +15,7 @@ import ProfilePage from '../pages/client/ProfilePage'
 
 import AdminProductListPage from '../pages/admin/AdminProductListPage'
 import AdminProductFormPage from '../pages/admin/AdminProductFormPage'
+import HomePage from '../pages/HomePage'
 
 export default function AppRoutes() {
     return (
@@ -24,7 +25,8 @@ export default function AppRoutes() {
             <Route path="/auth/recovery" element={<PasswordRecoveryPage />} />
 
             <Route element={<ClientLayout />}>
-                <Route path="/" element={<ProductListPage />} />
+                <Route path="/" element={<HomePage />} />
+                <Route path="/products" element={<ProductListPage />} />
                 <Route path="/products/:id" element={<ProductDetailPage />} />
 
                 <Route element={<ProtectedRoute />}>
