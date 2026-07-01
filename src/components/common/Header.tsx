@@ -14,7 +14,7 @@ export default function AppHeader() {
     return (
         <Header>
             <Flex flex={1} align="center" justify='space-between' style={{ height: "100%" }}>
-                <Typography.Title level={1} style={{ margin: 0, color: "whitesmoke" }}>
+                <Typography.Title level={1} style={{ margin: 0, color: "whitesmoke", cursor: "pointer" }} onClick={() => navigate("/")}>
                     PetShop
                 </Typography.Title>
                 {isAuthenticated && <Flex flex={1} justify='end' style={{ marginRight: 12 }}>
