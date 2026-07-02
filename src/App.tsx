@@ -7,7 +7,10 @@ import AppRoutes from './routes/AppRoutes'
 
 export default function App() {
   return (
-    <ConfigProvider>
+    <ConfigProvider theme={{
+        token: {
+          fontFamily: "Nunito"
+        }}}>
       <BrowserRouter>
         <AuthProvider>
           <FavoriteProvider>
