@@ -21,7 +21,7 @@ export default function LoginPage() {
         setLoading(true)
         try {
             const search = new URLSearchParams(location.search);
-            const redirectTo = search.get("redirectTo") ?? "/";
+            const redirectTo = search.get("redirectTo") ?? "/products";
 
             const { token, user } = await authService.login(values)
             login(token, user)
