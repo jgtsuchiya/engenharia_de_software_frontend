@@ -14,8 +14,8 @@ export default function AppHeader() {
     return (
         <Header>
             <Flex flex={1} align="center" justify='space-between' style={{ height: "100%" }}>
-                <Typography.Title level={1} style={{ margin: 0, color: "whitesmoke", cursor: "pointer" }} onClick={() => navigate("/")}>
-                    PetShop
+                <Typography.Title level={1} style={{ margin: 0, color: "whitesmoke", cursor: "pointer", fontFamily: "Patrick Hand SC" }} onClick={() => navigate("/")}>
+                    Petly
                 </Typography.Title>
                 {isAuthenticated && <Flex flex={1} justify='end' style={{ marginRight: 12 }}>
                     <Badge size='small' count={items.length} offset={[-8, 10]}>
